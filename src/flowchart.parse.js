@@ -13,7 +13,7 @@ function parse(input) {
   var chart = {
     symbols: {},
     start: null,
-    drawSVG: function(container, options) {
+    drawSVG: function (container, options) {
       var self = this;
 
       if (this.diagram) {
@@ -40,7 +40,7 @@ function parse(input) {
             dispSymbols[s.key] = new Operation(diagram, s);
             break;
           case 'inputoutput':
-            dispSymbols[s.key] = new InputOutput(diagram, s); 
+            dispSymbols[s.key] = new InputOutput(diagram, s);
             break;
           case 'subroutine':
             dispSymbols[s.key] = new Subroutine(diagram, s);
@@ -61,7 +61,7 @@ function parse(input) {
         if (self.start === s) {
           diagram.startWith(dispSymb);
         } else if (prevDisp && prev && !prevDisp.pathOk) {
-          if (prevDisp instanceof(Condition)) {
+          if (prevDisp instanceof (Condition)) {
             if (prev.yes === s) {
               prevDisp.yes(dispSymb);
             }
@@ -77,7 +77,7 @@ function parse(input) {
           return dispSymb;
         }
 
-        if (dispSymb instanceof(Condition)) {
+        if (dispSymb instanceof (Condition)) {
           if (s.yes) {
             constructChart(s.yes, dispSymb, s);
           }
@@ -93,7 +93,7 @@ function parse(input) {
 
       diagram.render();
     },
-    clean: function() {
+    clean: function () {
       this.diagram.clean();
     }
   };
@@ -101,14 +101,14 @@ function parse(input) {
   var lines = [];
   var prevBreak = 0;
   for (var i0 = 1, i0len = input.length; i0 < i0len; i0++) {
-    if(input[i0] === '\n' && input[i0 - 1] !== '\\') {
+    if (input[i0] === '\n' && input[i0 - 1] !== '\\') {
       var line0 = input.substring(prevBreak, i0);
       prevBreak = i0 + 1;
       lines.push(line0.replace(/\\\n/g, '\n'));
     }
   }
 
-  if(prevBreak < input.length) {
+  if (prevBreak < input.length) {
     lines.push(input.substr(prevBreak));
   }
 
@@ -124,20 +124,20 @@ function parse(input) {
     }
   }
 
-  function getStyle(s){
+  function getStyle(s) {
     var startIndex = s.indexOf('(') + 1;
     var endIndex = s.indexOf(')');
     if (startIndex >= 0 && endIndex >= 0) {
-      return s.substring(startIndex,endIndex);
+      return s.substring(startIndex, endIndex);
     }
     return '{}';
   }
 
-  function getSymbValue(s){
+  function getSymbValue(s) {
     var startIndex = s.indexOf('(') + 1;
     var endIndex = s.indexOf(')');
     if (startIndex >= 0 && endIndex >= 0) {
-      return s.substring(startIndex,endIndex);
+      return s.substring(startIndex, endIndex);
     }
     return '';
   }
@@ -146,7 +146,7 @@ function parse(input) {
     var startIndex = s.indexOf('(') + 1;
     var endIndex = s.indexOf(')');
     if (startIndex >= 0 && endIndex >= 0) {
-      return chart.symbols[s.substring(0, startIndex - 1)];   
+      return chart.symbols[s.substring(0, startIndex - 1)];
     }
     return chart.symbols[s];
   }
@@ -185,11 +185,11 @@ function parse(input) {
 
       //parse parameters
       var params = parts[0].match(/\((.*)\)/);
-      if (params && params.length > 1){
+      if (params && params.length > 1) {
         var entries = params[1].split(',');
-        for(var i = 0; i < entries.length; i++) {
+        for (var i = 0; i < entries.length; i++) {
           var entry = entries[0].split('=');
-          if (entry.length == 2){
+          if (entry.length == 2) {
             symbol.params[entry[0]] = entry[1];
           }
         }
@@ -243,6 +243,9 @@ function parse(input) {
     } else if (line.indexOf('->') >= 0) {
       // flow
       var flowSymbols = line.split('->');
+      flowSymbols.forEach(function (symbol, index) {
+        flowSymbols[index] = symbol.trim();
+      });
       for (var i = 0, lenS = flowSymbols.length; i < lenS; i++) {
         var flowSymb = flowSymbols[i];
         var symbVal = getSymbValue(flowSymb);
@@ -280,11 +283,11 @@ function parse(input) {
       var lineStyleSymbols = line.split('@>');
       for (var i = 0, lenS = lineStyleSymbols.length; i < lenS; i++) {
 
-        if ((i+1) != lenS){
+        if ((i + 1) != lenS) {
           var curSymb = getSymbol(lineStyleSymbols[i]);
-          var nextSymb = getSymbol(lineStyleSymbols[i+1]);
+          var nextSymb = getSymbol(lineStyleSymbols[i + 1]);
 
-          curSymb['lineStyle'][nextSymb.key] = JSON.parse(getStyle(lineStyleSymbols[i+1]));
+          curSymb['lineStyle'][nextSymb.key] = JSON.parse(getStyle(lineStyleSymbols[i + 1]));
         }
       }
     }

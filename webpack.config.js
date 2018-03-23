@@ -24,7 +24,7 @@ var config = {
 	],
 	output: {
 		path: path.join(__dirname, 'release'),
-		filename: component.name + '.js',
+		filename: component.name,
 		publicPath: '/release/'
 	},
 	plugins: [
