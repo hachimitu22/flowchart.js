@@ -148,6 +148,11 @@ Condition.prototype.render = function() {
 
 Condition.prototype.renderLines = function() {
   if (this.yes_symbol) {
+    if (Object.keys(this.lineStyle).length === 0) {
+      this['lineStyle'][this.yes_symbol.key] = {
+        stroke: this.getAttr('yes-line-color'),
+      };
+    }
     this.drawLineTo(this.yes_symbol, this.getAttr('yes-text'), this.yes_direction);
   }
 
